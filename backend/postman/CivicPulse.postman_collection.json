@@ -1,0 +1,1068 @@
+{
+  "info": {
+    "_postman_id": "a718b52f-1d3c-4e89-9a2c-civicpulse-v2",
+    "name": "CivicPulse API",
+    "description": "Complete Postman Collection for CivicPulse Civic & Consumer Safety Platform covering Auth, Admin, Issues, Complaints, and Health endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "issueId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "complaintId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "workerId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "description": "Authentication and user identity endpoints.",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Citizen\",\n  \"email\": \"newcitizen@example.com\",\n  \"password\": \"Password123!\",\n  \"phone\": \"9876543210\",\n  \"pincode\": \"110001\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Register a new citizen account. Required Role: Public (No auth required)."
+          }
+        },
+        {
+          "name": "Login - Super Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.token) {",
+                  "        pm.collectionVariables.set(\"token\", jsonData.token);",
+                  "        console.log(\"Token saved for Super Admin\");",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@civicpulse.com\",\n  \"password\": \"Test@1234\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Authenticate as seed Super Admin and save JWT token into {{token}}. Required Role: Public."
+          }
+        },
+        {
+          "name": "Login - Dept Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.token) {",
+                  "        pm.collectionVariables.set(\"token\", jsonData.token);",
+                  "        console.log(\"Token saved for Dept Admin\");",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"deptadmin@civicpulse.com\",\n  \"password\": \"Test@1234\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Authenticate as seed Department Admin and save JWT token into {{token}}. Required Role: Public."
+          }
+        },
+        {
+          "name": "Login - Worker",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.token) {",
+                  "        pm.collectionVariables.set(\"token\", jsonData.token);",
+                  "        console.log(\"Token saved for Worker\");",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"worker.roads@civicpulse.com\",\n  \"password\": \"Test@1234\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Authenticate as seed Roads Worker and save JWT token into {{token}}. Required Role: Public."
+          }
+        },
+        {
+          "name": "Login - Citizen",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.token) {",
+                  "        pm.collectionVariables.set(\"token\", jsonData.token);",
+                  "        console.log(\"Token saved for Citizen\");",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"citizen1@civicpulse.com\",\n  \"password\": \"Test@1234\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Authenticate as seed Citizen and save JWT token into {{token}}. Required Role: Public."
+          }
+        },
+        {
+          "name": "Get Current Profile (Me)",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            },
+            "description": "Fetch profile of current authenticated user without password. Required Role: Any logged-in user."
+          }
+        },
+        {
+          "name": "Update User Role",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"worker\",\n  \"department\": \"Roads & Potholes\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/users/{{userId}}/role",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "users",
+                "{{userId}}",
+                "role"
+              ]
+            },
+            "description": "Promote or update a user role and department. Required Role: super_admin only."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "description": "Administrative and worker management endpoints.",
+      "item": [
+        {
+          "name": "Get Workers List",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/workers?department=Roads & Potholes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "workers"
+              ],
+              "query": [
+                {
+                  "key": "department",
+                  "value": "Roads & Potholes",
+                  "description": "Filter by department (optional)",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "List all municipal workers, optionally filtered by department. Required Role: dept_admin or super_admin."
+          }
+        },
+        {
+          "name": "Get Admin Platform Stats",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/stats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "stats"
+              ]
+            },
+            "description": "Comprehensive platform KPIs including issues by status/category/priority, assigned/unassigned, worker counts, average resolution time, and complaints total. Required Role: dept_admin or super_admin."
+          }
+        },
+        {
+          "name": "Create Worker",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    var wId = (jsonData.user && (jsonData.user.id || jsonData.user._id)) || jsonData._id;",
+                  "    if (wId) {",
+                  "        pm.collectionVariables.set(\"workerId\", wId);",
+                  "        console.log(\"Saved workerId to collection variable:\", wId);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Field Worker\",\n  \"email\": \"worker.new@civicpulse.com\",\n  \"password\": \"Test@1234\",\n  \"department\": \"Roads & Potholes\",\n  \"phone\": \"9876543299\",\n  \"pincode\": \"110001\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/workers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "workers"
+              ]
+            },
+            "description": "Provision a new field worker account and assign to a department. Saves created worker ID into {{workerId}}. Required Role: super_admin only."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Issues",
+      "description": "Civic issue reporting, tracking, assignment, escalation, and resolution.",
+      "item": [
+        {
+          "name": "Create Issue",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData._id) {",
+                  "        pm.collectionVariables.set(\"issueId\", jsonData._id);",
+                  "        console.log(\"Saved issueId to collection variable:\", jsonData._id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Dangerous open manhole near market",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Uncovered manhole posing severe danger to pedestrians and motorists.",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "Roads & Potholes",
+                  "type": "text"
+                },
+                {
+                  "key": "pincode",
+                  "value": "110001",
+                  "type": "text"
+                },
+                {
+                  "key": "address",
+                  "value": "Near Market Gate 4, Main Street",
+                  "type": "text"
+                },
+                {
+                  "key": "priority",
+                  "value": "High",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": [],
+                  "description": "Optional issue photo (JPEG/PNG/WEBP/GIF, max 5MB)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/issues",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "issues"
+              ]
+            },
+            "description": "Report a new civic issue with optional image upload. Saves new _id into {{issueId}}. Required Role: Any logged-in user."
+          }
+        },
+        {
+          "name": "Get All Issues",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/issues?page=1&limit=10&search=&priority=&category=&status=&pincode=&department=&assignedWorker=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "issues"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number (enables pagination envelope)",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Items per page (max 50)",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Case-insensitive search on title and description",
+                  "disabled": true
+                },
+                {
+                  "key": "priority",
+                  "value": "",
+                  "description": "Filter by priority: Low, Medium, High",
+                  "disabled": true
+                },
+                {
+                  "key": "category",
+                  "value": "",
+                  "description": "Filter by category",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "Filter by status: Reported, In Progress, Resolved, Rejected",
+                  "disabled": true
+                },
+                {
+                  "key": "pincode",
+                  "value": "",
+                  "description": "Filter by pincode",
+                  "disabled": true
+                },
+                {
+                  "key": "department",
+                  "value": "",
+                  "description": "Filter by department",
+                  "disabled": true
+                },
+                {
+                  "key": "assignedWorker",
+                  "value": "",
+                  "description": "Filter by worker ObjectId",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Fetch issues list. Returns plain array without page/limit params (backward compatible), or { success, data, pagination } when page/limit is passed. Required Role: Public (No auth required)."
+          }
+        },
+        {
+          "name": "Get Single Issue by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/issues/{{issueId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "issues",
+                "{{issueId}}"
+              ]
+            },
+            "description": "Fetch complete issue details with populated reportedBy (name only), assignedWorker (name, dept), and statusHistory.changedBy (name, role). Required Role: Public (No auth required)."
+          }
+        },
+        {
+          "name": "Get My Reported Issues",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/issues/my",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "issues",
+                "my"
+              ]
+            },
+            "description": "Retrieve all issues reported by currently authenticated user, ordered newest first. Required Role: Any logged-in user."
+          }
+        },
+        {
+          "name": "Get Assigned Issues (Worker)",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/issues/assigned",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "issues",
+                "assigned"
+              ]
+            },
+            "description": "Retrieve issues assigned to current field worker, ordered newest first. Required Role: worker only."
+          }
+        },
+        {
+          "name": "Upvote Issue",
+          "request": {
+            "method": "PUT",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/issues/{{issueId}}/upvote",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "issues",
+                "{{issueId}}",
+                "upvote"
+              ]
+            },
+            "description": "Upvote a civic issue. Automatically escalates priority to High with statusHistory entry upon reaching 10 upvotes. Required Role: Any logged-in user."
+          }
+        },
+        {
+          "name": "Update Issue Status & Priority",
+          "request": {
+            "method": "PUT",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"In Progress\",\n  \"priority\": \"High\",\n  \"comment\": \"Investigation team dispatched\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/issues/{{issueId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "issues",
+                "{{issueId}}",
+                "status"
+              ]
+            },
+            "description": "Update status and/or priority of an issue with audit trail logging in statusHistory. Required Role: dept_admin or super_admin."
+          }
+        },
+        {
+          "name": "Assign Worker to Issue",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"workerId\": \"{{workerId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/issues/{{issueId}}/assign",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "issues",
+                "{{issueId}}",
+                "assign"
+              ]
+            },
+            "description": "Assign a municipal field worker to an issue. Worker must have role=\"worker\". Required Role: dept_admin or super_admin."
+          }
+        },
+        {
+          "name": "Resolve Issue with Proof Photo",
+          "request": {
+            "method": "PUT",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "notes",
+                  "value": "Repairs completed and road cleared.",
+                  "type": "text"
+                },
+                {
+                  "key": "proofImage",
+                  "type": "file",
+                  "src": [],
+                  "description": "Mandatory resolution proof image (magic-byte validated)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/issues/{{issueId}}/resolve",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "issues",
+                "{{issueId}}",
+                "resolve"
+              ]
+            },
+            "description": "Mark issue as Resolved with mandatory proof photo and notes. Required Role: worker, dept_admin, or super_admin."
+          }
+        },
+        {
+          "name": "Get Issues Aggregation Stats",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/issues/stats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "issues",
+                "stats"
+              ]
+            },
+            "description": "Aggregated analytics for civic issues (by status, category, priority, and department). Required Role: dept_admin or super_admin."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Complaints",
+      "description": "Consumer safety complaint filing, inspection, and status management.",
+      "item": [
+        {
+          "name": "Create Complaint",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData._id) {",
+                  "        pm.collectionVariables.set(\"complaintId\", jsonData._id);",
+                  "        console.log(\"Saved complaintId to collection variable:\", jsonData._id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "brandName",
+                  "value": "Apex Grocery Store",
+                  "type": "text"
+                },
+                {
+                  "key": "productName",
+                  "value": "Expired Dairy Products",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "Adulterated Food",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Packaged curd sold 2 weeks after expiry date.",
+                  "type": "text"
+                },
+                {
+                  "key": "proofImage",
+                  "type": "file",
+                  "src": [],
+                  "description": "Optional complaint proof photo or invoice"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/complaints",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "complaints"
+              ]
+            },
+            "description": "File a new consumer safety complaint with optional proof image. Saves new _id into {{complaintId}}. Required Role: Any logged-in user."
+          }
+        },
+        {
+          "name": "Get Complaints List",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/complaints",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "complaints"
+              ]
+            },
+            "description": "List complaints (citizens see only own complaints; admins see all). Required Role: Any logged-in user."
+          }
+        },
+        {
+          "name": "Get Single Complaint by ID",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/complaints/{{complaintId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "complaints",
+                "{{complaintId}}"
+              ]
+            },
+            "description": "Fetch complaint details by ID with populated filedBy (name only) and statusHistory. Required Role: Complaint Owner (citizen) or Admin."
+          }
+        },
+        {
+          "name": "Update Complaint Status",
+          "request": {
+            "method": "PUT",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Under Review\",\n  \"comment\": \"Food safety inspector assigned for store visit\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/complaints/{{complaintId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "complaints",
+                "{{complaintId}}",
+                "status"
+              ]
+            },
+            "description": "Update complaint status and record audit log in statusHistory. Required Role: dept_admin or super_admin."
+          }
+        },
+        {
+          "name": "Get Complaint Aggregation Stats",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/complaints/stats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "complaints",
+                "stats"
+              ]
+            },
+            "description": "Aggregation metrics for consumer complaints broken down by category and status. Required Role: dept_admin or super_admin."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "description": "System health and uptime monitoring.",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "Verify server health and MongoDB connection readyState. Required Role: Public (No auth required)."
+          }
+        }
+      ]
+    }
+  ]
+}

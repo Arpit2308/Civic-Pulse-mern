@@ -1,0 +1,191 @@
+  console.log
+    ACTUAL_RESULT_DB_ROLE: citizen
+
+      at Object.log (tests/auth.test.js:68:15)
+
+  console.log
+    ACTUAL_RESULT_LOGIN_ROLE: citizen
+
+      at Object.log (tests/auth.test.js:69:15)
+
+  console.log
+    ACTUAL_RESULT_JWT_ROLE: citizen
+
+      at Object.log (tests/auth.test.js:70:15)
+
+
+(node:29272) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/issues.test.js (16.724 s)
+  Issues Endpoints
+    POST /api/issues
+      √ should create an issue with valid data (256 ms)
+      √ should reject missing required fields (165 ms)
+      √ should reject missing title (151 ms)
+      √ should reject unauthenticated request (163 ms)
+      √ should default category to Other for unknown categories (155 ms)
+    GET /api/issues
+      √ should list all issues (public, no auth needed) (202 ms)
+      √ should filter by pincode (198 ms)
+      √ should filter by category (189 ms)
+      √ should filter by status (188 ms)
+      √ should return empty for non-matching filter (185 ms)
+    PUT /api/issues/:id/upvote
+      √ should upvote an issue successfully (165 ms)
+      √ should reject duplicate upvote from same user (173 ms)
+      √ should reject upvote with invalid ObjectId (158 ms)
+      √ should reject unauthenticated upvote (156 ms)
+      √ should return 404 for nonexistent issue (159 ms)
+      √ should escalate priority to High and append statusHistory entry when issue reaches 10 upvotes (Task 8) (171 ms)
+      √ should not push extra statusHistory entry if already High priority when reaching 10 upvotes (172 ms)
+    PUT /api/issues/:id/status
+      √ should allow dept_admin to update status (370 ms)
+      √ should allow super_admin to update status (371 ms)
+      √ should return 403 for citizen trying to update status (158 ms)
+      √ should return 400 for invalid status enum value (356 ms)
+      √ should return 400 for invalid priority enum value (353 ms)
+      √ should return 400 when neither status nor priority provided (353 ms)
+      √ should return 400 for invalid ObjectId (355 ms)
+    GET /api/issues/stats
+      √ should return stats for dept_admin (372 ms)
+      √ should return stats for super_admin (368 ms)
+      √ should return 403 for citizen (169 ms)
+      √ should return 401 for unauthenticated request (166 ms)
+    Department Mapping & statusHistory tracking
+      √ should map categories to the 4 departments and map Other to General catch-all (201 ms)
+      √ should include initial statusHistory entry at creation time (Task 3) (153 ms)
+      √ should append to statusHistory when status is updated (361 ms)
+    PATCH /api/issues/:id/assign
+      √ should allow dept_admin to assign a worker to an issue (574 ms)
+      √ should reject worker assignment from a citizen with 403 (352 ms)
+      √ should reject assigning a non-worker user with 400 (493 ms)
+    PUT /api/issues/:id/resolve
+      √ should allow worker to resolve issue with proof photo (413 ms)
+      √ should reject spoofed image upload on resolve endpoint (Task 4 magic-byte validation) (367 ms)
+      √ should reject resolve request from a citizen with 403 (160 ms)
+    GET /api/issues/my
+      √ should list only issues reported by current user, newest first (322 ms)
+      √ should reject unauthenticated request with 401 (141 ms)
+    GET /api/issues/assigned
+      √ should list only issues assigned to current worker, newest first (885 ms)
+      √ should reject unauthenticated request with 401 (143 ms)
+      √ should reject non-worker role (citizen) with 403 (146 ms)
+      √ should reject non-worker role (dept_admin) with 403 (344 ms)
+    GET /api/issues/:id
+      √ should return issue by id with populated reportedBy, assignedWorker, statusHistory.changedBy (584 ms)
+      √ should return 404 for non-existent issue ID (147 ms)
+      √ should return 400 for invalid ObjectId format (145 ms)
+    Privacy Check: GET /api/issues
+      √ should contain no email field anywhere in the public issues response (576 ms)
+    Pagination, Search & Priority: GET /api/issues
+      √ should return plain array when neither page nor limit is passed (backward compatibility) (404 ms)
+      √ should return paginated response when page or limit is passed (406 ms)
+      √ should cap limit to 50 when higher limit is requested (409 ms)
+      √ should filter issues by case-insensitive search across title and description (412 ms)
+      √ should safely handle and escape regex special characters in search (400 ms)
+      √ should filter issues by priority (409 ms)
+
+PASS tests/auth.test.js (13.728 s)
+  Auth Endpoints
+    POST /api/auth/register
+      √ should register a new user successfully (133 ms)
+      √ should reject duplicate email (87 ms)
+      √ should reject weak password (< 6 chars) (14 ms)
+      √ should reject invalid email format (24 ms)
+      √ should reject missing name (13 ms)
+      √ should assign role citizen even if role: super_admin is sent in body (155 ms)
+    POST /api/auth/login
+      √ should login with valid credentials and return a JWT (153 ms)
+      √ should reject wrong password (140 ms)
+      √ should reject nonexistent user (82 ms)
+      √ should reject missing email (91 ms)
+      √ should reject missing password (80 ms)
+    PATCH /api/auth/users/:id/role
+      √ should allow super_admin to promote a user (361 ms)
+      √ should allow super_admin to promote a user to worker with department (412 ms)
+      √ should return 403 when a citizen tries to promote (275 ms)
+      √ should return 400 for invalid role value (342 ms)
+      √ should return 401 for unauthenticated request (12 ms)
+    JWT Role Claim Behavior (Documented Design Decision)
+      √ should issue a token with the NEW role after re-login post-promotion (247 ms)
+      √ OLD token retains old role claim (documented: no live revocation) (325 ms)
+    POST /api/admin/workers
+      √ should allow super_admin to create a worker with role=worker (341 ms)
+      √ should reject worker creation by citizen with 403 (144 ms)
+      √ should reject worker creation by dept_admin with 403 (209 ms)
+      √ should reject worker creation for unauthenticated request with 401 (12 ms)
+      √ should enforce validation rules (name, email, password length) (210 ms)
+    GET /api/auth/me
+      √ should return current user profile without password for citizen (147 ms)
+      √ should return worker profile with department, phone, pincode and never password (214 ms)
+      √ should return 401 when request is unauthenticated (11 ms)
+      √ should return 404 when authenticated user is not found in database (146 ms)
+    Admin Endpoints (Task 6: GET /api/admin/workers & GET /api/admin/stats)
+      GET /api/admin/workers
+        √ should allow dept_admin to list all workers with name, email, department, phone (964 ms)
+        √ should filter workers by department (958 ms)
+        √ should reject unauthenticated request with 401 (946 ms)
+        √ should reject citizen with 403 (956 ms)
+        √ should reject worker with 403 (951 ms)
+      GET /api/admin/stats
+        √ should return aggregated platform stats for super_admin (955 ms)
+        √ should return aggregated platform stats for dept_admin (934 ms)
+        √ should reject unauthenticated request with 401 (902 ms)
+        √ should reject citizen with 403 (902 ms)
+
+PASS tests/complaints.test.js (7.684 s)
+  Complaints Endpoints
+    POST /api/complaints
+      √ should create a complaint with valid data (242 ms)
+      √ should accept alternative field names (storeName, product, issueDetails) (151 ms)
+      √ should reject missing required fields (156 ms)
+      √ should reject unauthenticated request (143 ms)
+    GET /api/complaints
+      √ should list complaints for authenticated user (173 ms)
+      √ should reject unauthenticated request (142 ms)
+      √ citizen should only see own complaints (293 ms)
+      √ admin should see all complaints (498 ms)
+    PUT /api/complaints/:id/status
+      √ should allow dept_admin to update status (358 ms)
+      √ should allow super_admin to update status (350 ms)
+      √ should return 403 for citizen (151 ms)
+      √ should return 400 for invalid status enum (338 ms)
+      √ should return 400 for missing status (340 ms)
+      √ should return 400 for invalid ObjectId (345 ms)
+      √ should return 404 for nonexistent complaint (361 ms)
+    GET /api/complaints/stats
+      √ should return stats for dept_admin (377 ms)
+      √ should return 403 for citizen (165 ms)
+      √ should return 401 for unauthenticated request (166 ms)
+    Task 7: Complaint statusHistory & GET /api/complaints/:id
+      √ should initialize statusHistory on complaint creation (147 ms)
+      √ should append to statusHistory on PUT /api/complaints/:id/status with optional comment (364 ms)
+      GET /api/complaints/:id
+        √ should allow owner citizen to fetch their complaint (161 ms)
+        √ should allow dept_admin to fetch any complaint (366 ms)
+        √ should allow super_admin to fetch any complaint (358 ms)
+        √ should reject a different citizen with 403 (291 ms)
+        √ should reject unauthenticated request with 401 (157 ms)
+        √ should return 400 for invalid ObjectId format (154 ms)
+        √ should return 404 for non-existent complaint ID (159 ms)
+
+PASS tests/uploads.test.js
+  Image Upload Endpoints
+    Valid Image Upload
+      √ should accept a valid PNG image on POST /api/issues (269 ms)
+      √ should accept a valid JPEG image on POST /api/complaints (176 ms)
+    Oversized File Rejection
+      √ should reject file > 5MB with 400 (405 ms)
+    Spoofed File Type Rejection (Magic-Byte Validation)
+      √ should reject a text file masquerading as PNG (164 ms)
+      √ should clean up rejected spoofed file from disk (no orphans) (164 ms)
+    Wrong Extension/MIME Rejection
+      √ should reject a .txt file even with valid extension mapping missing (155 ms)
+    Request Without Image
+      √ should create issue without an image (152 ms)
+
+Test Suites: 4 passed, 4 total
+Tests:       123 passed, 123 total
+Snapshots:   0 total
+Time:        40.633 s, estimated 43 s
+Ran all test suites.
