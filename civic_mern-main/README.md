@@ -123,7 +123,6 @@ The frontend application runs on `http://localhost:5173`.
 | Method | Endpoint | Access | Description |
 | :--- | :--- | :--- | :--- |
 | `GET` | `/api/health` | Public | System and database health status |
-<<<<<<< HEAD
 | `POST` | `/api/auth/register` | Public | Register a new user (strictly defaults role to citizen) |
 | `POST` | `/api/auth/login` | Public | Login and obtain JWT token |
 | `PATCH` | `/api/auth/users/:id/role` | `super_admin` | Promote/change user role and assign department |
@@ -139,12 +138,3 @@ The frontend application runs on `http://localhost:5173`.
 | `POST` | `/api/complaints` | Authenticated | Submit a consumer safety violation report |
 | `PUT` | `/api/complaints/:id/status` | `dept_admin`, `super_admin` | Update consumer complaint status |
 | `GET` | `/api/complaints/stats` | `dept_admin`, `super_admin` | Consumer complaints metrics aggregation |
-=======
-| `POST` | `/api/auth/register` | Public | Register a new user |
-| `POST` | `/api/auth/login` | Public | Login and obtain JWT token |
-| `GET` | `/api/issues` | Public | List civic issues (optional `?pincode=`, `?category=`) |
-| `POST` | `/api/issues` | Authenticated | Report a new civic issue |
-| `PUT` | `/api/issues/:id/upvote` | Authenticated | Upvote a reported civic issue |
-| `GET` | `/api/complaints` | Authenticated | View consumer / food safety complaints |
-| `POST` | `/api/complaints` | Authenticated | Submit a consumer safety violation report |
->>>>>>> a0ed63d19babf255ae1321ba2cf6004d98220f83
